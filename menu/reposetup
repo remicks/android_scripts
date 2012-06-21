@@ -76,11 +76,7 @@ if [ $setupanswer == "3" ]; then
 	echo "initializing the Kitchen app repository.."
 
 	cd $LOCAL/..
-<<<<<<< HEAD
 	repo init -u http://github.com/TeamKeyblade/android_manifest.git -b advanced
-=======
-	repo init -u http://github.com/TeamKeyblade/android_manifest.git -b stable
->>>>>>> master
 
 	echo ""
 	echo "Sync the Kitchen app repository?"
