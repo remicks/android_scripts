@@ -111,11 +111,20 @@ if [ $AUTHOR == "redeemer" ]; then
 	echo "echo \"Removing Kitchen\"" >> ../redeemer
 	echo "echo \"\"" >> ../redeemer
 	echo "rm -rf .repo" >> ../redeemer
+<<<<<<< HEAD
 	echo "rm -rf kitchen" >> ../redeemer
 	echo "echo \"Settng Up Kitchen\"" >> ../redeemer
 	echo "echo \"\"" >> ../redeemer
 	echo "repo init -u http://github.com/swordrune10/android_manifest.git -b advanced" >> ../redeemer
 	echo "repo sync" >> ../redeemer
+=======
+	echo "rm -rf \$LOCAL" >> ../redeemer
+	echo "rm -f swordkitchen.sh" >> ../redeemer
+	echo "echo \"Settng Up Kitchen\"" >> ../redeemer
+	echo "echo \"\"" >> ../redeemer
+	echo "~/bin/repo init -u http://github.com/swordrune10/android_manifest.git -b stable" >> ../redeemer
+	echo "~/bin/repo sync" >> ../redeemer
+>>>>>>> master
 fi
 
 if [ $AUTHOR == "destroyer" ] || [ $AUTHOR == "destroyerofworlds" ]; then
@@ -133,7 +142,12 @@ if [ $AUTHOR == "destroyer" ] || [ $AUTHOR == "destroyerofworlds" ]; then
 	echo "echo \"Removing Kitchen\"" >> ../$AUTHOR
 	echo "echo \"\"" >> ../$AUTHOR
 	echo "rm -rf .repo" >> ../$AUTHOR
+<<<<<<< HEAD
 	echo "rm -rf .scripts" >> ../$AUTHOR
+=======
+	echo "rm -rf \$LOCAL" >> ../$AUTHOR
+	echo "rm -f swordkitchen.sh" >> ../$AUTHOR
+>>>>>>> master
 
 	if [ $AUTHOR == "destroyerofworlds" ]; then
 		echo "rm -rf \$REPOS" >> ../destroyerofworlds
