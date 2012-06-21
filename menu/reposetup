@@ -83,6 +83,10 @@ if [ $setupanswer == "3" ]; then
 	read -p "yes/no? " kitchensync
 
 	if [ "$kitchensync" == "yes" ] || [ "$kitchensync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync kitchen
 	fi
 
@@ -108,6 +112,10 @@ if [ $setupanswer == "4" ]; then
 	read -p "yes/no? " aokpsync
 
 	if [ "$aokpsync" == "yes" ] || [ "$aokpsync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync aokp
 	fi
 
@@ -133,6 +141,10 @@ if [ $setupanswer == "5" ]; then
 	read -p "yes/no? " aospsync
 
 	if [ "$aospsync" == "yes" ] || [ "$aospsync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync aosp
 	fi
 
@@ -158,6 +170,10 @@ if [ $setupanswer == "6" ]; then
 	read -p "yes/no? " cm9sync
 
 	if [ "$cm9sync" == "yes" ] || [ "$cm9sync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync cm
 	fi
 
@@ -183,6 +199,10 @@ if [ $setupanswer == "7" ]; then
 	read -p "yes/no? " evervolvsync
 
 	if [ "$evervolvsync" == "yes" ] || [ "$evervolvsync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync ev
 	fi
 
@@ -208,6 +228,10 @@ if [ $setupanswer == "8" ]; then
 	read -p "yes/no? " raospsync
 
 	if [ "$raospsync" == "yes" ] || [ "$raospsync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync raosp
 	fi
 
@@ -235,6 +259,10 @@ if [ $setupanswer == "9" ]; then
 	read -p "yes/no? " stssync
 
 	if [ "$stssync" == "yes" ] || [ "$stssync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync sts
 	fi
 
@@ -260,6 +288,10 @@ if [ $setupanswer == "10" ]; then
 	read -p "yes/no? " gummysync
 
 	if [ "$gummysync" == "yes" ] || [ "$gummysync" == "y" ]; then
+<<<<<<< HEAD
+=======
+		INIT=""
+>>>>>>> master
 		reposync gummy
 	fi
 

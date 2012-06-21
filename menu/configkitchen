@@ -17,8 +17,12 @@ echo "Kitchen Config Menu"
 echo "  1. Edit Gitpuller"
 echo "  2. Edit Romeditor"
 echo "  3. Create/Edit other repo list"
+<<<<<<< HEAD
 echo "  4. Auto Builder Menu"
 echo "  5. Go Back"
+=======
+echo "  4. Go Back"
+>>>>>>> master
 echo ""
 read -p "Which one would you like to do?: " configs
 
@@ -36,7 +40,7 @@ if ( echo $configs | grep -q [A-Za-z] ); then
 	menu
 fi
 
-if [ $configs -gt "5" ]; then
+if [ $configs -gt "4" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -68,6 +72,7 @@ if [ $configs == "3" ]; then
 fi
 
 if [ $configs == "4" ]; then
+<<<<<<< HEAD
 	buildautomenu(){
 	clear
 
@@ -226,6 +231,8 @@ if [ $configs == "4" ]; then
 fi
 
 if [ $configs == "5" ]; then
+=======
+>>>>>>> master
 	echo ""
 	read -p "Returning to Main Menu, Press Enter to continue: " done
 	exit 0

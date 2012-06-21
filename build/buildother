@@ -226,6 +226,10 @@ if [ $SCRIPT_REPO == "cm" ]; then
 	fi
 fi
 
+<<<<<<< HEAD
+=======
+echo "Finished!"
+>>>>>>> master
 exit 0
 }
 menu

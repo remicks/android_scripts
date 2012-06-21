@@ -124,6 +124,7 @@ while true; do
 	buildandro
 	setupprop
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD
 	# Publish Build ( if possible )
 	if ( find $BUILDS/../publish &> /dev/null); then
 		publishandro &
@@ -132,6 +133,11 @@ while true; do
 done
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+=======
+done
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo "Finished!"
+>>>>>>> master
 exit 0
 }
 

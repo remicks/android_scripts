@@ -50,40 +50,56 @@ fi
 if [ $buildanswer == "1" ]; then
 	export builddevicemenu=$(echo "gnexusmenu")
 	builddevice
+<<<<<<< HEAD
 	read done
+=======
+	read -p "Press Enter to continue: " done
+>>>>>>> master
 fi
 
 if [ $buildanswer == "2" ]; then
 	export builddevicemenu=$(echo "nexussmenu")
 	builddevice
+<<<<<<< HEAD
 	read done
+=======
+	read -p "Press Enter to continue: " done
+>>>>>>> master
 fi
 
 if [ $buildanswer == "3" ]; then
 	export builddevicemenu=$(echo "xoommenu")
 	builddevice
+<<<<<<< HEAD
 	read done
+=======
+	read -p "Press Enter to continue: " done
+>>>>>>> master
 fi
 
 if [ $buildanswer == "4" ]; then
 	export builddevicemenu=$(echo "allmenu")
 	builddevice
+<<<<<<< HEAD
 	read done
+=======
+	read -p "Press Enter to continue: " done
+>>>>>>> master
 fi
 
 if [ $buildanswer == "5" ]; then
 	buildsts
-	read done
+	read -p "Press Enter to continue: " done
 fi
 
 if [ $buildanswer == "6" ]; then
 	buildother
-	read done
+	read -p "Press Enter to continue: " done
 fi
 
 if [ $buildanswer == "7" ]; then
 	buildotherrepo
-	read done
+	read -p "Press Enter to continue: " done
 fi
 
 if [ $buildanswer == "8" ]; then
