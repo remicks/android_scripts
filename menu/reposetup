@@ -82,6 +82,8 @@ setupcode() {
 
 	cd $repo_folder
 
+	echo "repo init -u $repo_url -b $repo_platform"
+	read done
 	repo init -u $repo_url -b $repo_platform
 
 	echo ""
