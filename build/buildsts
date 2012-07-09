@@ -24,7 +24,7 @@ echo ""
 echo "Which one would you like to do?"
 read version
 
-if [ "$version" == "" ]; then
+if [ ! "$version" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -61,8 +61,6 @@ if ( ! find $REPOS/$SCRIPT_REPO-$REPO_PLATFORM &> /dev/null ); then
 	menu
 fi
 
-setupandro
-
 if [ $version == "1" ]; then
 	export SCRIPT_DEVICE=$(echo "solana")
 fi
@@ -81,27 +79,23 @@ fi
 
 if [ ! $version == "5" ]; then
 	buildandro
-	setupprop
 fi
 
 if [ $version == "5" ]; then
 	export SCRIPT_DEVICE=$(echo "solana")
 	buildandro
-	setupprop
 
 	export SCRIPT_DEVICE=$(echo "maserati")
 	buildandro
-	setupprop
 
 	export SCRIPT_DEVICE=$(echo "targa")
 	buildandro
-	setupprop
 
 	export SCRIPT_DEVICE=$(echo "spyder")
 	buildandro
-	setupprop
 fi
 
+echo "Finished!"
 exit 0
 }
 menu
