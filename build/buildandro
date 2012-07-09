@@ -1,47 +1,149 @@
 #!/bin/bash
 # Written by Sean Donovan (swordrune10)
-if [ ! "$OTHER_REPO_FOLDER" == "" ]; then
-	outfolder=$(echo "$OTHER_REPO_FOLDER/out/target/product/$SCRIPT_DEVICE/system")
-else
-	outfolder=$(echo "$REPOS/$SCRIPT_REPO-$REPO_PLATFORM/out/target/product/$SCRIPT_DEVICE/system")
-fi
+#setup build
+export REPO_FOLDER=$( echo "$REPOS/$SCRIPT_REPO-$REPO_PLATFORM" )
+export BUILD_FOLDER=$( echo "$BUILDS/$SCRIPT_REPO-$REPO_PLATFORM" )
+export DOTREPO=$( echo "$REPO_FOLDER/.repo" )
 
-if ( find $outfolder/build.prop &> /dev/null ); then
-	rm $outfolder/build.prop
-fi
-cd ..
-if ( find $outfolder/*.zip &> /dev/null ); then
-	rm $outfolder/*.zip*
-fi
+if [ "$OTHER_REPO_FOLDER" ]; then
+	outfolder=$(echo "$OTHER_REPO_FOLDER/out/target/product/$SCRIPT_DEVICE")
 
-if [ ! "$OTHER_REPO_FOLDER" == "" ]; then
+	rm -f $outfolder/system/build.prop
+	rm -f $outfolder/*.zip*
+
 	cd $OTHER_REPO_FOLDER
 else
-	cd $REPOS/$SCRIPT_REPO-$REPO_PLATFORM
+	outfolder=$(echo "$REPO_FOLDER/out/target/product/$SCRIPT_DEVICE")
+
+	rm -f $outfolder/system/build.prop
+	rm -f $outfolder/*.zip*
+
+	cd $REPO_FOLDER
 fi
 
 . build/envsetup.sh
 
+if [ ! $SLOPPYSECONDS ]; then
+	$LOCAL/config/romeditor
+
+	if [ $AUTO ]; then
+		make clobber
+	fi
+
+	if [ ! $AUTO ]; then
+		echo "clean out folder?"
+		read -p "yes/no? " purgeout
+
+		if [ "$purgeout" == "" ]; then
+			echo ""
+			echo "Did you just hit enter without a care? for that im just gonna clean the folder anyways.."
+
+			make clobber
+		fi
+
+		if [ $purgeout == "yes" ] || [ $purgeout == "y" ]; then
+			make clobber
+		fi
+	fi
+fi
+
+#build android
 if [ $SCRIPT_REPO == "cm" ] || [ $SCRIPT_REPO == "sts" ]; then
 	brunch $SCRIPT_DEVICE -j$THREADS_TOTAL
+else
+	if ( find vendor/*/vendorsetup.sh &> /dev/null ); then
+		vendor_lunch=$(sed -e 's/add_lunch_combo //g' \
+		-e 's/_.*/_/' \
+		vendor/*/vendorsetup.sh | sed "/#.*/d" | sed "/combo.*/d" | sed "/panda.*/d" | sed "/^$/d" | head -n 1)
+	elif ( find device/*/*/vendorsetup.sh &> /dev/null ); then
+			vendor_lunch=$(sed -e 's/add_lunch_combo //g' \
+			-e 's/_.*/_/' \
+			device/*/*/vendorsetup.sh | sed "/#.*/d" | sed "/combo.*/d" | sed "/panda.*/d" | sed "/^$/d" | head -n 1)
+		else
+			echo "Repository not supported!"
+			read -p "Press Enter to continue: " done
+			exit 0
+	fi
+
+	lunch $vendor_lunch$SCRIPT_DEVICE-userdebug
+	make CC=gcc-4.4 CXX=g++-4.4 otapackage -j$THREADS_TOTAL
+fi
+
+#build aftermath
+if [ "$OTHER_REPO_FOLDER" ]; then
+	"Build zip is located in $OTHER_REPO_FOLDER/out/target/product/$SCRIPT_DEVICE"
 	exit 0
+else
+	cd $REPO_FOLDER/out/target/product/$SCRIPT_DEVICE
+fi
+
+if [ $SCRIPT_REPO == "cm" ] || [ $SCRIPT_REPO == "sts" ]; then
+	zip=$(find cm-*.zip)
 fi
 
 if [ $SCRIPT_REPO == "aokp" ]; then
-	vendor_lunch=$(echo "aokp_")
+	zip=$(find aokp*.zip)
 fi
 
 if [ $SCRIPT_REPO == "evervolv" ]; then
-	vendor_lunch=$(echo "ev_")
+	zip=$(find Evervolv*.zip)
 fi
 
 if [ $SCRIPT_REPO == "gummy" ]; then
-	vendor_lunch=$(echo "Gummy_")
+	zip=$(find Gummy*.zip)
 fi
 
 if [ $SCRIPT_REPO == "aosp" ] || [ $SCRIPT_REPO == "rooted-aosp" ]; then
-	vendor_lunch=$(echo "full_")
+	zip=$(find full*.zip)
+
+	echo "Making temporary folder for post-building $zip fixes"
+	mkdir -p $BUILDS/temp/zipout
+	cp $zip $BUILDS/temp
+	cd $BUILDS/temp/zipout
+
+	echo "Unzipping $zip"
+	unzip ../$zip > /dev/null
+
+	echo "Removing uneeded recovery folder from $zip"
+	rm -r recovery
+
+	if [ $SCRIPT_REPO == "aosp" ]; then
+		cd system
+		echo "Adding rom manager items to $zip's build.prop"
+		echo "ro.rommanager.developerid=$(whoami)" >> build.prop
+		echo "ro.modversion=$(echo "aosp-$REPO_PLATFORM-$(date +%Y%m%d)-$SCRIPT_DEVICE")" >> build.prop
+
+		cd ..
+	fi
+
+	echo "Zipping $zip back up"
+	zip -r unsignedcrap.zip . > /dev/null
+
+	echo "Signing $zip with test keys"
+	java -Xmx1024m -classpath $LOCAL/testsign.jar testsign unsignedcrap.zip $zip
 fi
 
-lunch $vendor_lunch$SCRIPT_DEVICE-userdebug
-make CC=gcc-4.4 CXX=g++-4.4 otapackage -j$THREADS_TOTAL
+mkdir -p $BUILD_FOLDER/old
+
+if ( find $BUILD_FOLDER/*$SCRIPT_DEVICE.zip &> /dev/null); then
+	echo "Moving older build to $BUILDS/$SCRIPT_REPO-$REPO_PLATFORM/old"
+
+	mv $BUILD_FOLDER/*$SCRIPT_DEVICE.zip $BUILD_FOLDER/old
+	mv $BUILD_FOLDER/*$SCRIPT_DEVICE.zip.md5sum $BUILD_FOLDER/old
+fi
+
+newzip=$(echo $SCRIPT_REPO-$REPO_PLATFORM-$(date +%Y%m%d)-SWORDKITCHEN-$SCRIPT_DEVICE.zip)
+
+echo "Copying to $BUILD_FOLDER"
+echo "$zip -> $newzip"
+cp $zip $BUILD_FOLDER/$newzip
+
+if [ $SCRIPT_REPO == "aosp" ] || [ $SCRIPT_REPO == "rooted-aosp" ]; then
+	echo "Cleaning up temporary folder"
+	cd $BUILDS
+	rm -r temp
+fi
+
+cd $BUILD_FOLDER
+md5sum $newzip
+md5sum $newzip > $newzip.md5sum

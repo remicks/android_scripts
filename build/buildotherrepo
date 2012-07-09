@@ -10,9 +10,8 @@ fi
 
 clear
 
-if [ "$( cat $LOCAL/config/otherrepo | head -n1 )" == "" ]; then
+if [ ! "$( cat $LOCAL/config/otherrepo | head -n1 )" ]; then
 	echo "other repo file is empty, please add to file then try again!"
-	read -p "Press Enter to continue: " done
 	exit 0
 fi
 
@@ -37,16 +36,17 @@ echo "Which custom android repository are we building from today?"
 while true; do
 	let countdown=$countdown+1
 
-	echo "  "$countdown". "${filelurker[$countdown]}
-
-	if [ $countdown == $( expr $count - 1 ) ]; then
+	if [ "${filelurker[$countdown]}" == "EOF" ]; then
 		break
 	fi
+
+	echo "  "$countdown". "${filelurker[$countdown]}
+
 done
 echo "  $count. Go Back"
 read version
 
-if [ "$version" == "" ]; then
+if [ ! "$version" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -91,7 +91,7 @@ echo "This will serve as naming the build and putting it in a proper folder"
 echo "Type in exit to go to back"
 read reponame
 
-if [ "$reponame" == "" ]; then
+if [ ! "$reponame" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -104,52 +104,6 @@ if [ $reponame == "exit" ]; then
 	exit 0
 fi
 
-echo ""
-echo "What platform is this repo?"
-echo "Examples are; ics, gingerbread, froyo.."
-echo "Type in exit to go to back"
-read platformname
-
-if [ "$platformname" == "" ]; then
-	echo ""
-	echo "You did not make a proper selection, try again!"
-	read -p "Press Enter to continue: " done
-	buildotherrepo
-	exit 0
-fi
-
-if [ $platformname == "exit" ]; then
-	read -p "Press Enter to continue: " done
-	buildotherrepo
-	exit 0
-fi
-
-echo "The selected repo name is "$reponame
-echo "The selected platform name is "$platformname
-echo "With this selection the builds folder is "$reponame-$platformname
-echo ""
-echo "Is this correct?"
-read -p "yes/no? " answer
-
-if [ "$answer" == "" ]; then
-	echo ""
-	echo "You did not make a proper selection, try again!"
-	read -p "Press Enter to continue: " done
-	buildotherrepo
-	exit 0
-fi
-
-if [ $answer == "no" ] || [ $answer == "n" ]; then
-	echo ""
-	echo "I'm sorry lets try again.."
-	read -p "Press Enter to continue: " done
-	buildotherrepo
-	exit 0
-fi
-
-export SCRIPT_REPO=$(echo $reponame)
-export REPO_PLATFORM=$(echo $platformname)
-
 clear
 
 echo "Swordrune10's Android Kitchen!"
@@ -159,7 +113,7 @@ echo "Type in list to see all supported devices"
 echo "Type in exit to go back"
 read device
 
-if [ "$device" == "" ]; then
+if [ ! "$device" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -194,7 +148,7 @@ while [ $device == "list" ]; do
 	read device
 done
 
-if [ "$device" == "" ]; then
+if [ ! "$device" ]; then
 	echo ""
 	echo "You did not make a proper selection, try again!"
 	read -p "Press Enter to continue: " done
@@ -208,29 +162,11 @@ if [ $device == "exit" ]; then
 	exit 0
 fi
 
-cd "${filelurker[$version]}"
-
 export OTHER_REPO_FOLDER=$(echo "${filelurker[$version]}")
-
-if ( find vendor/*/vendorsetup.sh &> /dev/null ); then
-	export vendor_lunch=$(sed -e 's/add_lunch_combo //g' \
-	-e 's/_.*/_/' \
-	vendor/*/vendorsetup.sh | sed "/#.*/d" | sed "/combo.*/d" | sed "/panda.*/d" | sed "/^$/d" | head -n 1)
-elif ( find device/*/*/vendorsetup.sh &> /dev/null ); then
-		export vendor_lunch=$(sed -e 's/add_lunch_combo //g' \
-		-e 's/_.*/_/' \
-		device/*/*/vendorsetup.sh | sed "/#.*/d" | sed "/combo.*/d" | sed "/panda.*/d" | sed "/^$/d" | head -n 1)
-	else
-		echo "Repository not supported!"
-		read -p "Press Enter to continue: " done
-		buildotherrepo
-		exit 0
-fi
 
 clear
 
-setupandro
-
 export SCRIPT_DEVICE=$(echo $device)
 buildandro
-setupprop
+
+echo "Finished!"
